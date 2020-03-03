@@ -1,10 +1,15 @@
 import requests
 import json
 
-def test_post(url, payload, header):
-    return requests.post(url, data = json.dumps(payload), headers = header)
+def test_get(url):
+    r = requests.get(url)
+    return r
 
-def file_post(url, filename, header):
+def test_post(url, payload, header):
+    r = requests.post(url, data=json.dumps(payload), headers= header)
+    return r
+
+def sing_file_post(url, filename, header):
     with open(filename, 'rb') as f:
         print(f)
         r = requests.post(url, files={filename: f})
@@ -17,9 +22,15 @@ def mult_file_post(url, filenames, header):
 
     r = requests.post(url, files = tosend, headers = header)
     return r
+
+
+
+
+
 if __name__ == "__main__":
-    url = 'https://49263074.ngrok.io/sendData'
-    payload = {'test':1}
+    BASE = 'https://49263074.ngrok.io/'
+    url = 'https://49263074.ngrok.io/senddata'
+    payload = {'tests'}
     header = dict()
     # a = test_post(url, payload, header)
     # print(a.status_code)
@@ -27,7 +38,7 @@ if __name__ == "__main__":
 
 
     PREFIX = 'test_files/'
-    # b = file_post(url, PREFIX + 'post_test.csv', header)
+    # b = sing_file_post(url, PREFIX + 'post_test1.csv', header)
     # print(b.status_code)
     # print(b.content)
 
@@ -40,3 +51,7 @@ if __name__ == "__main__":
     d = mult_file_post(url, tf, header)
     print(d.status_code)
     print(d.content)
+
+    # temp_r = test_get(BASE + 'testget')
+    # print(temp_r.status_code)
+    # print(temp_r.text)

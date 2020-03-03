@@ -9,13 +9,20 @@ app = Flask(__name__)
 ## python -m flask run --host=127.0.0.1:5000
 ## ngrok 5000
 
-
 @app.route('/')
 def hello():
     return "Immobile Computing's Final Project"
 
-@app.route('/sendData', methods=['POST'])
-def sendData():
+@app.route('/testget', methods=['GET'])
+def test_get():
+    if(request.method == 'GET'):
+        return "successfully pinged the server"
+    else:
+        print("invalid request made by client")
+    return "invalid request made - please try again"
+
+@app.route('/senddata', methods=['POST'])
+def send_data():
     DATA_DIR = "classification_data/"
 
     if(request.method == 'POST'):
@@ -33,3 +40,9 @@ def sendData():
     else:
         print("Invalid request made")
         return "THIS IS NOT WORKING!!!!"
+
+@app.route('/classify', methods=['POST'])
+def classify():
+    raise NotImplementedError
+
+ 
