@@ -1,7 +1,24 @@
 import numpy as np
 import cv2 
 
-cap = cv2.VideoCapture('')
+def record_video(vid_dir, fname):
+    cap = cv2.VideoCapture(1)
+    fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+    out = cv2.VideoWriter('{}.avi'.format(vid_dir + fname), fourcc, 20.0, (640,480))
+    
+    global RECORD
+    RECORD = True
+    while(RECORD):
+        ret, frame = cap.read()
+        out.write(frame)
+        cv2.imshow('gait_capture_playback', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+        
+    cap.release()
+    out.release()
+    cv2.destroyAllWindows()
+    return True
 
 def read_from_file(vid_dir, fname):
     cap = cv2.VideoCapture(vid_dir + fname)
@@ -67,12 +84,13 @@ def sample_frames(vid_dir, fname, proportion):
 # cv2.imshow('frame 10', buf[9])
 
 if __name__ == "__main__":
+    record_video('video_data/', 'test')
     # read_from_file('video/', 'test1.avi')
-    sm = sample_frames('video/', 'test1.avi', 0.1)
-    print(sm.shape)
-    for ind in range(sm.shape[0]):
-        cv2.imshow('test', sm[ind])
-        cv2.waitKey(0)
+    # sm = sample_frames('video/', 'test1.avi', 0.1)
+    # print(sm.shape)
+    # for ind in range(sm.shape[0]):
+    #     cv2.imshow('test', sm[ind])
+    #     cv2.waitKey(0)
         
-    cap.release()
-    cv2.destroyAllWindows()
+    # cap.release()
+    # cv2.destroyAllWindows()
