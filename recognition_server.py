@@ -70,7 +70,7 @@ def send_data():
 
 @app.route('/record/<fname>', methods=['GET'])
 def record(fname):
-    tmpt = threading.Thread(target=record_video, args=('video/', fname))
+    tmpt = threading.Thread(target=record_video, args=('video_data/', fname))
     tmpt.start()
     print("started recording and saving to {}".format(fname))
     return "Started Recording"
@@ -83,7 +83,7 @@ def stop_record():
 
 @app.route('/listfiles', methods=['GET'])
 def list_files():
-    DATA_DIR = "classification_data/"
+    DATA_DIR = "mobile_data/"
 
     if(request.method == 'GET'):
         print("request to see the files in our classification server")
