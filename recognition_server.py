@@ -5,7 +5,7 @@ import sys
 
 app = Flask(__name__)
 
-## expot FLASK_APP = recognition_server.py
+## export FLASK_APP = recognition_server.py
 ## python -m flask run --host=127.0.0.1:5000
 ## ngrok 5000
 
@@ -27,7 +27,9 @@ def send_data():
 
     if(request.method == 'POST'):
         print("Post request made to send data")
+        # print("testing\n", request.get_data(as_text = True))
         files = request.files
+        # print(files)
         for tempf in files.keys():
             f = request.files[tempf]
             try:
@@ -40,6 +42,23 @@ def send_data():
     else:
         print("Invalid request made")
         return "THIS IS NOT WORKING!!!!"
+
+
+
+@app.route('/listfiles', methods=['GET'])
+def list_files():
+    DATA_DIR = "classification_data/"
+
+    if(request.method == 'GET'):
+        print("request to see the files in our classification server")
+        temp = os.listdir(DATA_DIR)
+        total = ""
+        for f in temp:
+            total = total + " ; " + f 
+        return total
+    else:
+        print("invalid request made")
+        return "ERROR"
 
 @app.route('/classify', methods=['POST'])
 def classify():
