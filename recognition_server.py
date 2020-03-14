@@ -14,8 +14,8 @@ app = Flask(__name__)
 
 global RECORD
 
-def record_video(vid_dir, fname):
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+def record_video(vid_dir, fname, webcam_num=0):
+    cap = cv2.VideoCapture(webcam_num, cv2.CAP_DSHOW)
     fourcc = cv2.VideoWriter_fourcc(*'DIVX')
     out = cv2.VideoWriter('{}.avi'.format(vid_dir + fname), fourcc, 20.0, (640,480))
     
@@ -47,10 +47,9 @@ def test_get():
 
 @app.route('/senddata', methods=['POST'])
 def send_data():
-    DATA_DIR = "classification_data/"
+    DATA_DIR = "mobile_data/"
 
     if(request.method == 'POST'):
-        print("Post request made to send data")
         # print("testing\n", request.get_data(as_text = True))
         files = request.files
         # print(files)
@@ -61,7 +60,6 @@ def send_data():
             except: 
                 print("failed to save the file")
                 return "Failed to recieve the file"
-        print(os.listdir(DATA_DIR))
         return "Successfully downloaded file"
     else:
         print("Invalid request made")
@@ -70,7 +68,8 @@ def send_data():
 
 @app.route('/record/<fname>', methods=['GET'])
 def record(fname):
-    tmpt = threading.Thread(target=record_video, args=('video_data/', fname))
+    # tmpt = threading.Thread(target=record_video, args=('video_data/', fname, 0))
+    tmpt = threading.Thread(target=record_video, args=('video_data/', fname, 1))
     tmpt.start()
     print("started recording and saving to {}".format(fname))
     return "Started Recording"
@@ -95,6 +94,22 @@ def list_files():
     else:
         print("invalid request made")
         return "ERROR"
+
+@app.route('/listvids', methods=['GET'])
+def list_vids():
+    DATA_DIR = "video_data"
+
+    if(request.method == 'GET'):
+        print("request to see the files in our classification server")
+        temp = os.listdir(DATA_DIR)
+        total = ""
+        for f in temp:
+            total = total + " ; " + f 
+        return total
+    else:
+        print("invalid request made")
+        return "ERROR"
+
 
 @app.route('/classify', methods=['POST'])
 def classify():
