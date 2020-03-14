@@ -4,3 +4,4 @@ venv/
 *.ipynb
 *.tar.gz
 *.avi
+*.csv
