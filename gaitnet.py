@@ -8,10 +8,10 @@ from torch.utils.data import sampler
 class gaitAccelNet(nn.Module):
     def __init__(self, n_people=3):
         super(gaitAccelNet, self).__init__()
-        self.conv1 = nn.Conv1d(13, 26, 1)
-        self.conv2 = nn.Conv1d(26, 52, 3)
-        self.pool = nn.MaxPool1d(1)    
-        self.fc1 = nn.Linear(52, 10)
+        self.conv1 = nn.Conv2d(13, 52, 1)
+        self.conv2 = nn.Conv2d(52, 104, (1,3))
+        self.pool = nn.MaxPool2d(1,1)    
+        self.fc1 = nn.Linear(104, 10)
         self.fc2 = nn.Linear(10, n_people) 
         #last layer should be the number of potential outputs we have
     
