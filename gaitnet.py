@@ -6,6 +6,12 @@ from torch.utils.data import DataLoader
 from torch.utils.data import sampler
 
 class gaitAccelNet(nn.Module):
+    """
+    Our torch model that represents our gait classifier
+    Simple classifier consistenting of 2 convolutional layers 
+                                        1 maxpool layer and 
+                                        2 fully connected layers 
+    """
     def __init__(self, n_people=3):
         super(gaitAccelNet, self).__init__()
         self.conv1 = nn.Conv2d(13, 52, 1)

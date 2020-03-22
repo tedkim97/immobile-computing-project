@@ -6,15 +6,24 @@ import cv2
 import numpy as np
 import threading
 
+# Reminder for running the flask script
+# "set FLASK_APP=recognition_server.py"
+# "python -m flask run --host=127.0.0.1:5000"
+# "ngrok 5000"
+
+
 app = Flask(__name__)
 
-## set FLASK_APP=recognition_server.py
-## python -m flask run --host=127.0.0.1:5000
-## ngrok 5000
 
-global RECORD
+global RECORD # Global variable that defines the recording state of our setup
+# This will not really work well if there are multiple requests being made 
+# (because of the mulithreading applications); however, for our purpose it should
+# be OK 
 
 def record_video(vid_dir, fname, webcam_num=0):
+    """
+    Helper function to signal the server to start recording video with opencv
+    """
     cap = cv2.VideoCapture(webcam_num, cv2.CAP_DSHOW)
     fourcc = cv2.VideoWriter_fourcc(*'DIVX')
     out = cv2.VideoWriter('{}.avi'.format(vid_dir + fname), fourcc, 20.0, (640,480))
@@ -39,6 +48,9 @@ def hello():
 
 @app.route('/testget', methods=['GET'])
 def test_get():
+    """
+    testing functionality
+    """
     if(request.method == 'GET'):
         return "successfully pinged the server"
     else:
@@ -47,6 +59,9 @@ def test_get():
 
 @app.route('/senddata', methods=['POST'])
 def send_data():
+    """
+    function to receive the csv files recorded on a phone
+    """
     DATA_DIR = "mobile_data/"
 
     if(request.method == 'POST'):
@@ -68,7 +83,9 @@ def send_data():
 
 @app.route('/record/<fname>', methods=['GET'])
 def record(fname):
-    # tmpt = threading.Thread(target=record_video, args=('video_data/', fname, 0))
+    """
+    signal to automatically label and record a video file with a GET request
+    """
     tmpt = threading.Thread(target=record_video, args=('video_data/', fname, 1))
     tmpt.start()
     print("started recording and saving to {}".format(fname))
@@ -76,12 +93,18 @@ def record(fname):
 
 @app.route('/stop_record', methods=['GET'])
 def stop_record():
+    """
+    function to stop recording by flipping RECORD to false
+    """
     global RECORD
     RECORD = False
     return ("stopped recording")
 
 @app.route('/listfiles', methods=['GET'])
 def list_files():
+    """
+    testing function that lets the requestee see what files are on the server
+    """
     DATA_DIR = "mobile_data/"
 
     if(request.method == 'GET'):
@@ -97,6 +120,9 @@ def list_files():
 
 @app.route('/listvids', methods=['GET'])
 def list_vids():
+    """
+    testing function that lets the reqestee see what videos are on the server
+    """
     DATA_DIR = "video_data"
 
     if(request.method == 'GET'):
@@ -109,7 +135,6 @@ def list_vids():
     else:
         print("invalid request made")
         return "ERROR"
-
 
 @app.route('/classify', methods=['POST'])
 def classify():
